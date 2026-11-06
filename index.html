@@ -10,7 +10,6 @@
 *,*::before,*::after{box-sizing:inherit}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;min-height:100%;background:var(--base);color:var(--ink);font:400 1rem/1.45 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
-#bg{position:fixed;left:0;right:0;top:0;height:100vh;height:100lvh;z-index:-1;background:radial-gradient(ellipse 38% 62% at 50% 47%,#e5adbc 0%,#e9b5c2 30%,rgba(233,198,208,.55) 62%,rgba(242,212,219,0) 100%),var(--base)}
 main{max-width:30rem;margin:0 auto;padding:1.4rem 1rem 3rem}
 h1{font-size:clamp(1.35rem,7vw,2rem);line-height:1.1;letter-spacing:-.03em;font-weight:600;white-space:nowrap;color:#4a3340;margin:.5rem .3rem .3rem}
 .sub{margin:0 .3rem 1.2rem;color:var(--mute)}
@@ -18,10 +17,10 @@ button{font:inherit;color:var(--ink);cursor:pointer}
 button:focus-visible,summary:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
 .g{position:relative;overflow:hidden;isolation:isolate;background:linear-gradient(150deg,rgba(255,255,255,.5),rgba(255,255,255,.18));border:0;border-radius:1.7rem;box-shadow:0 12px 32px var(--sh),0 1px 2px rgba(110,60,70,.18);padding:1.1rem 1.2rem;margin-bottom:.8rem}
 .g>*{position:relative;z-index:1}
-.g::before{content:"";position:absolute;inset:-16px;z-index:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 62%,rgba(255,255,255,.3)),radial-gradient(70% 60% at var(--hx,15%) var(--hy,5%),rgba(255,255,255,.45),transparent 62%),linear-gradient(rgba(255,255,255,.04),rgba(255,255,255,.04)),linear-gradient(rgba(255,240,246,.22),rgba(255,240,246,.22)),var(--lens,none) var(--bx,0px) var(--by,0px)/var(--bw,100%) var(--bh,100%) no-repeat}
+.g::before{content:"";position:absolute;inset:-16px;z-index:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 62%,rgba(255,255,255,.3)),radial-gradient(70% 60% at var(--hx,15%) var(--hy,5%),rgba(255,255,255,.45),transparent 62%),linear-gradient(rgba(255,255,255,.04),rgba(255,255,255,.04)),linear-gradient(rgba(255,240,246,.22),rgba(255,240,246,.22))}
 .g::after,.days button::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.5px;pointer-events:none;background:linear-gradient(var(--ang,140deg),rgba(255,255,255,.98),rgba(255,255,255,.12) 32%,rgba(255,255,255,.1) 68%,rgba(255,255,255,.85));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude}
 .days{display:flex;gap:.3rem;margin-bottom:.9rem}
-.days button{position:relative;flex:1;min-width:0;padding:.55rem 0;font-size:.82rem;font-weight:600;border:0;border-radius:2rem;background:linear-gradient(150deg,rgba(255,255,255,.6),rgba(255,255,255,.25));-webkit-backdrop-filter:blur(8px) saturate(180%);backdrop-filter:blur(8px) saturate(180%);box-shadow:0 6px 16px var(--sh),inset 0 1.5px 1px rgba(255,255,255,.9),inset 0 0 12px rgba(255,255,255,.25)}
+.days button{position:relative;flex:1;min-width:0;padding:.55rem 0;font-size:.82rem;font-weight:600;border:0;border-radius:2rem;background:linear-gradient(150deg,rgba(255,255,255,.6),rgba(255,255,255,.25));box-shadow:0 6px 16px var(--sh),inset 0 1.5px 1px rgba(255,255,255,.9),inset 0 0 12px rgba(255,255,255,.25)}
 .days button[aria-pressed="true"]{background:var(--sel);box-shadow:0 4px 12px var(--sh),inset 0 1px 0 var(--hi)}
 .days button.today::after{content:"";display:inline-block;width:.32rem;height:.32rem;border-radius:50%;background:var(--acc);margin-left:.25rem;vertical-align:middle}
 .wx-h{display:flex;justify-content:space-between;align-items:center;gap:1rem}
@@ -105,7 +104,6 @@ ul.l li:first-child{border-top:0}
 </style>
 </head>
 <body>
-<div id="bg" aria-hidden="true"></div>
 <main>
 <h1 id="hi"></h1>
 <p class="sub" id="dt"></p>
@@ -113,7 +111,7 @@ ul.l li:first-child{border-top:0}
 <div id="v"></div>
 </main>
 <script>
-let NW=0,NH=0,tk=0,LX=.3,LY=.12,TX=.3,TY=.12,raf=0;
+let tk=0,LX=.3,LY=.12;
 function light(){
   const vw=innerWidth,vh=innerHeight;
   document.querySelectorAll(".g,.days button").forEach(e=>{const r=e.getBoundingClientRect();
@@ -122,43 +120,10 @@ function light(){
     const a=Math.atan2(LY*vh-(r.top+r.height/2),LX*vw-(r.left+r.width/2))*180/Math.PI+90;
     e.style.setProperty("--ang",a.toFixed(0)+"deg")});
 }
-function place(){
-  light();
-  if(!NW)return;
-  const bg=document.getElementById("bg").getBoundingClientRect(),vw=bg.width,vh=bg.height,
-        k=Math.max(vw/NW,vh/NH),w=NW*k,h=NH*k,ox=(vw-w)*.47+bg.left,oy=(vh-h)*.30+bg.top,R=document.documentElement.style;
-  R.setProperty("--bw",w+"px");R.setProperty("--bh",h+"px");
-  document.querySelectorAll(".g").forEach(e=>{const r=e.getBoundingClientRect();
-    e.style.setProperty("--bx",(ox-r.left+16)+"px");e.style.setProperty("--by",(oy-r.top+16)+"px")});
-}
-function tick(){if(!tk){tk=1;requestAnimationFrame(()=>{tk=0;place()})}}
-function glide(){raf=0;LX+=(TX-LX)*.12;LY+=(TY-LY)*.12;light();
-  if(Math.abs(TX-LX)+Math.abs(TY-LY)>.002)raf=requestAnimationFrame(glide)}
-function aim(x,y){TX=Math.max(0,Math.min(1,x));TY=Math.max(0,Math.min(1,y));if(!raf)raf=requestAnimationFrame(glide)}
-(function(){
-  const R=document.documentElement.style,dp=Math.min(devicePixelRatio||1,2),
-        W=Math.round(innerWidth*dp),H=Math.round(Math.max(innerHeight,(screen.height||0)*.0+innerHeight)*dp*1.0),
-        c=document.createElement("canvas");c.width=W;c.height=H;NW=W;NH=H;
-  const x=c.getContext("2d");
-  x.fillStyle="#f2d4db";x.fillRect(0,0,W,H);
-  x.save();x.translate(W*.5,H*.47);x.scale(W*.38,H*.62);
-  const q=x.createRadialGradient(0,0,0,0,0,1);
-  q.addColorStop(0,"rgba(229,173,188,1)");q.addColorStop(.3,"rgba(233,181,194,1)");q.addColorStop(.62,"rgba(233,198,208,.55)");q.addColorStop(1,"rgba(242,212,219,0)");
-  x.fillStyle=q;x.fillRect(-1,-1,2,2);x.restore();
-  const s=x.getImageData(0,0,W,H),o=x.createImageData(W,H),a=s.data,d=o.data,A=6*dp;
-  c.toBlob(bw=>{
-    for(let y=0;y<H;y++)for(let X=0;X<W;X++){
-      const dx=A*Math.sin(y*.03/dp+Math.sin(X*.02/dp)*2),dy=A*Math.sin(X*.028/dp+Math.sin(y*.024/dp)*2);
-      const sx=Math.min(W-1,Math.max(0,Math.round(X+dx))),sy=Math.min(H-1,Math.max(0,Math.round(y+dy))),i=(sy*W+sx)*4,j=(y*W+X)*4;
-      d[j]=a[i];d[j+1]=a[i+1];d[j+2]=a[i+2];d[j+3]=255;
-    }
-    x.putImageData(o,0,0);
-    c.toBlob(bl=>{R.setProperty("--lens","url("+URL.createObjectURL(bl)+")");place()},"image/png");
-  },"image/png");
-  addEventListener("scroll",tick,{passive:true});
-  addEventListener("resize",tick);
-  document.addEventListener("toggle",tick,true);
-})();
+const place=light;
+function tick(){if(!tk){tk=1;requestAnimationFrame(()=>{tk=0;light()})}}
+addEventListener("resize",tick);
+document.addEventListener("toggle",tick,true);
 const DN=["Mandag","Tirsdag","Onsdag","Torsdag","Fredag","Lørdag","Søndag"];
 const MID=["Ovnsbakte kyllinglår, kål og 2 poteter","Omelett med grønnsaker og ost","Kyllinglår (rester), kål og 2 poteter","Kjøttdeig-kålpanne (lag dobbel porsjon)","Taco-salat med kjøttdeigen fra torsdag","Burger uten brød i salatblad, kål eller frosne grønnsaker","Ovnsbakte kyllinglår, kål og 2 poteter"];
 const LU=["Grovt knekkebrød med ost og salami, agurk og kokt egg eller kesam","Eggerøre med ost og tomat","Kokte egg, kesam og agurk"];
